@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Quake Report</string>
+
+    <!-- city names -->
+    <string name="san_francisco">San Francisco</string>
+    <string name="london">London</string>
+    <string name="tokyo">Tokyo</string>
+    <string name="maxico">Maxico City</string>
+    <string name="moscow">Moscow</string>
+    <string name="paris">Paris</string>
+
+    <!-- date -->
+    <string name="date">24/12/2007</string>
+
+    <!-- magnitude -->
+    <string name="mag">7.2</string>
 </resources>
