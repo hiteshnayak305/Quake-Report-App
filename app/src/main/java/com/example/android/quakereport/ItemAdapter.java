@@ -1,7 +1,9 @@
 package com.example.android.quakereport;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,20 @@ public class ItemAdapter extends ArrayAdapter {
 
         TextView time = (TextView) listItemView.findViewById(R.id.time_view);
         time.setText(TimeFormatter(date1));
+
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        TextView magnitudeView = (TextView) listItemView.findViewById(R.id.mag_view);
+        GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor((int) Math.floor(currentItem.getMagnitude()));
+
+        //
+        magnitudeColor = ContextCompat.getColor(getContext(), magnitudeColor);
+        // Set the color on the magnitude circle
+        magnitudeCircle.setColor(magnitudeColor);
+
         return listItemView;
     }
 
@@ -84,8 +100,57 @@ public class ItemAdapter extends ArrayAdapter {
         return dateFormat2.format(obj);
     }
 
+    /**
+     * formate decimal to x.x formate
+     *
+     * @param d id double typed magnitude
+     * @return returns one place decimal as string
+     */
     protected String decFormatter(double d) {
         DecimalFormat formatter = new DecimalFormat("0.0");
         return formatter.format(d);
+    }
+
+    /**
+     * method to return color according to magnitude
+     *
+     * @param mag double typed magnitude casted to int
+     * @return returned color resource id
+     */
+    protected int getMagnitudeColor(int mag) {
+        int magColorId;
+        switch (mag) {
+            case 0:
+            case 1:
+                magColorId = R.color.magnitude1;
+                break;
+            case 2:
+                magColorId = R.color.magnitude2;
+                break;
+            case 3:
+                magColorId = R.color.magnitude3;
+                break;
+            case 4:
+                magColorId = R.color.magnitude4;
+                break;
+            case 5:
+                magColorId = R.color.magnitude5;
+                break;
+            case 6:
+                magColorId = R.color.magnitude6;
+                break;
+            case 7:
+                magColorId = R.color.magnitude7;
+                break;
+            case 8:
+                magColorId = R.color.magnitude8;
+                break;
+            case 9:
+                magColorId = R.color.magnitude9;
+                break;
+            default:
+                magColorId = R.color.magnitude10plus;
+        }
+        return magColorId;
     }
 }
