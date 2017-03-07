@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,10 +34,23 @@ public class ItemAdapter extends ArrayAdapter {
         Item currentItem = (Item) getItem(position);
 
         TextView mag = (TextView) listItemView.findViewById(R.id.mag_view);
-        mag.setText(String.valueOf(currentItem.getMagnitude()));   //String.valueOf to get int in string value
+        //mag.setText(String.valueOf(currentItem.getMagnitude()));   //String.valueOf to get int in string value
+        mag.setText(decFormatter(currentItem.getMagnitude()));
 
-        TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
-        city.setText(currentItem.getCity());
+        String fullCity = currentItem.getCity();
+        if (fullCity.indexOf(',') == -1) {
+            TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
+            offset.setText("Near the,");
+
+            TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
+            city.setText(fullCity);
+        } else {
+            TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
+            offset.setText(fullCity.substring(0, fullCity.indexOf(',') + 1));
+
+            TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
+            city.setText(fullCity.substring(fullCity.indexOf(',') + 2));
+        }
 
         Date date1 = new Date(currentItem.getDate());
         TextView date = (TextView) listItemView.findViewById(R.id.date_view);
@@ -55,7 +69,7 @@ public class ItemAdapter extends ArrayAdapter {
      * @return return date in string format
      */
     protected String DateFormatter(Date obj) {
-        SimpleDateFormat dateFormat1 = new SimpleDateFormat("LLL, dd, yyyy");
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("LLL dd, yyyy");
         return dateFormat1.format(obj);
     }
 
@@ -68,5 +82,10 @@ public class ItemAdapter extends ArrayAdapter {
     protected String TimeFormatter(Date obj) {
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("h:mm a");
         return dateFormat2.format(obj);
+    }
+
+    protected String decFormatter(double d) {
+        DecimalFormat formatter = new DecimalFormat("0.0");
+        return formatter.format(d);
     }
 }
