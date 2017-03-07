@@ -30,11 +30,11 @@ public class ItemAdapter extends ArrayAdapter {
 
         Item currentItem = (Item) getItem(position);
         TextView mag = (TextView) listItemView.findViewById(R.id.mag_view);
-        mag.setText(currentItem.getMagnitude());
+        mag.setText(String.valueOf(currentItem.getMagnitude()));
         TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
         city.setText(currentItem.getCity());
         TextView date = (TextView) listItemView.findViewById(R.id.date_view);
-        date.setText(currentItem.getDate());
+        date.setText(String.valueOf(currentItem.getDate()));
         return listItemView;
     }
 }
