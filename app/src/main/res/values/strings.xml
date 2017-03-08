@@ -15,4 +15,6 @@
 
     <!-- magnitude -->
     <string name="mag">7.2</string>
+
+    <string name="near_the">Near the,</string>
 </resources>

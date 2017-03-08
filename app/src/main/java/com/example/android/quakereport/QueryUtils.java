@@ -60,7 +60,9 @@ public final class QueryUtils {
                 long time = property.getLong("time");
                 //String time = property.getString("time");
                 String city = property.getString("place");
-                earthquakes.add(new Item(mag, city, time));
+
+                String url = property.getString("url");
+                earthquakes.add(new Item(mag, city, time, url));
             }
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,

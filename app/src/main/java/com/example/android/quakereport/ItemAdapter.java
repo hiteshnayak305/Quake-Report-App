@@ -1,7 +1,9 @@
 package com.example.android.quakereport;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -28,53 +30,63 @@ public class ItemAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
         }
 
-        Item currentItem = (Item) getItem(position);
+        final Item currentItem = (Item) getItem(position);
+        if (currentItem != null) {
+            TextView mag = (TextView) listItemView.findViewById(R.id.mag_view);
+            //mag.setText(String.valueOf(currentItem.getMagnitude()));   //String.valueOf to get int in string value
+            mag.setText(decFormatter(currentItem.getMagnitude()));
 
-        TextView mag = (TextView) listItemView.findViewById(R.id.mag_view);
-        //mag.setText(String.valueOf(currentItem.getMagnitude()));   //String.valueOf to get int in string value
-        mag.setText(decFormatter(currentItem.getMagnitude()));
+            String fullCity = currentItem.getCity();
+            if (fullCity.indexOf(',') == -1) {
+                TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
+                offset.setText(R.string.near_the);
 
-        String fullCity = currentItem.getCity();
-        if (fullCity.indexOf(',') == -1) {
-            TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
-            offset.setText("Near the,");
+                TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
+                city.setText(fullCity);
+            } else {
+                TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
+                offset.setText(fullCity.substring(0, fullCity.indexOf(',') + 1));
 
-            TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
-            city.setText(fullCity);
-        } else {
-            TextView offset = (TextView) listItemView.findViewById(R.id.city_offset_view);
-            offset.setText(fullCity.substring(0, fullCity.indexOf(',') + 1));
+                TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
+                city.setText(fullCity.substring(fullCity.indexOf(',') + 2));
+            }
 
-            TextView city = (TextView) listItemView.findViewById(R.id.city_name_view);
-            city.setText(fullCity.substring(fullCity.indexOf(',') + 2));
+            Date date1 = new Date(currentItem.getDate());
+            TextView date = (TextView) listItemView.findViewById(R.id.date_view);
+            //date.setText(String.valueOf(currentItem.getDate()));
+            date.setText(DateFormatter(date1));
+
+            TextView time = (TextView) listItemView.findViewById(R.id.time_view);
+            time.setText(TimeFormatter(date1));
+
+            // Set the proper background color on the magnitude circle.
+            // Fetch the background from the TextView, which is a GradientDrawable.
+            // already used TextView magnitudeView = (TextView) listItemView.findViewById(R.id.mag_view);
+            GradientDrawable magnitudeCircle = (GradientDrawable) mag.getBackground();
+
+            // Get the appropriate background color based on the current earthquake magnitude
+            int magnitudeColor = getMagnitudeColor((int) Math.floor(currentItem.getMagnitude()));
+
+            //convert color resourceid to color
+            magnitudeColor = ContextCompat.getColor(getContext(), magnitudeColor);
+            // Set the color on the magnitude circle
+            magnitudeCircle.setColor(magnitudeColor);
+
+            //set onClicklistener to redirect to website
+            listItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.getUrl()));  //action view used to view website  Uri parse url to uri
+                    getContext().startActivity(intent);
+                }
+            });
         }
-
-        Date date1 = new Date(currentItem.getDate());
-        TextView date = (TextView) listItemView.findViewById(R.id.date_view);
-        //date.setText(String.valueOf(currentItem.getDate()));
-        date.setText(DateFormatter(date1));
-
-        TextView time = (TextView) listItemView.findViewById(R.id.time_view);
-        time.setText(TimeFormatter(date1));
-
-        // Set the proper background color on the magnitude circle.
-        // Fetch the background from the TextView, which is a GradientDrawable.
-        TextView magnitudeView = (TextView) listItemView.findViewById(R.id.mag_view);
-        GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
-
-        // Get the appropriate background color based on the current earthquake magnitude
-        int magnitudeColor = getMagnitudeColor((int) Math.floor(currentItem.getMagnitude()));
-
-        //
-        magnitudeColor = ContextCompat.getColor(getContext(), magnitudeColor);
-        // Set the color on the magnitude circle
-        magnitudeCircle.setColor(magnitudeColor);
-
         return listItemView;
     }
 
@@ -84,7 +96,7 @@ public class ItemAdapter extends ArrayAdapter {
      * @param obj date object
      * @return return date in string format
      */
-    protected String DateFormatter(Date obj) {
+    private String DateFormatter(Date obj) {
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("LLL dd, yyyy");
         return dateFormat1.format(obj);
     }
@@ -95,7 +107,7 @@ public class ItemAdapter extends ArrayAdapter {
      * @param obj date object
      * @return string time
      */
-    protected String TimeFormatter(Date obj) {
+    private String TimeFormatter(Date obj) {
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("h:mm a");
         return dateFormat2.format(obj);
     }
@@ -106,7 +118,7 @@ public class ItemAdapter extends ArrayAdapter {
      * @param d id double typed magnitude
      * @return returns one place decimal as string
      */
-    protected String decFormatter(double d) {
+    private String decFormatter(double d) {
         DecimalFormat formatter = new DecimalFormat("0.0");
         return formatter.format(d);
     }
@@ -117,7 +129,7 @@ public class ItemAdapter extends ArrayAdapter {
      * @param mag double typed magnitude casted to int
      * @return returned color resource id
      */
-    protected int getMagnitudeColor(int mag) {
+    private int getMagnitudeColor(int mag) {
         int magColorId;
         switch (mag) {
             case 0:
