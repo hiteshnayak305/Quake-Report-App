@@ -37,6 +37,7 @@ public class ItemAdapter extends ArrayAdapter {
         }
 
         final Item currentItem = (Item) getItem(position);
+
         if (currentItem != null) {
             TextView mag = (TextView) listItemView.findViewById(R.id.mag_view);
             //mag.setText(String.valueOf(currentItem.getMagnitude()));   //String.valueOf to get int in string value
