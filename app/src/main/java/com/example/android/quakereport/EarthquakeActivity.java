@@ -36,6 +36,11 @@ public class EarthquakeActivity extends AppCompatActivity {
         getSupportLoaderManager().initLoader(1, null, loaderCallbacks);
     }
 
+    /**
+     * method to set ui
+     *
+     * @param items items to be loaded to ui
+     */
     public void setUi(List<Item> items) {
 
         // Find a reference to the {@link ListView} in the layout

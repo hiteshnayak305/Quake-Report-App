@@ -13,21 +13,26 @@ class EarthquakeLoader extends AsyncTaskLoader<List<Item>> {
     private String urlString;
 
     /**
-     * @param context
-     * @param urlString
+     * constructor for creating new loader
+     * @param context context of application activity
+     * @param urlString string url to contain url
      */
     EarthquakeLoader(Context context, String urlString) {
         super(context);
         this.urlString = urlString;
     }
 
+    /**
+     * force start loading of data
+     */
     @Override
     protected void onStartLoading() {
         forceLoad();
     }
 
     /**
-     * @return
+     * background method to getData from online resources
+     * @return items decoded from json string
      */
     @Override
     public List<Item> loadInBackground() {
