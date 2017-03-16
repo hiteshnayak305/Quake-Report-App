@@ -1,25 +1,39 @@
 package com.example.android.quakereport;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
-    //public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    LoaderManager.LoaderCallbacks<List<Item>> loaderCallbacks = new LoaderManager.LoaderCallbacks<List<Item>>() {
+        @Override
+        public Loader<List<Item>> onCreateLoader(int id, Bundle args) {
+            return new EarthquakeLoader(getApplicationContext(), "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10");
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Item>> loader, List<Item> data) {
+            setUi(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Item>> loader) {
+            setUi(new ArrayList<Item>());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_earthquake);
 
-        CustomTask task = new CustomTask();
-
-        task.execute("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10");
+        getSupportLoaderManager().initLoader(1, null, loaderCallbacks);
     }
 
     public void setUi(List<Item> items) {
@@ -34,28 +48,5 @@ public class EarthquakeActivity extends AppCompatActivity {
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
 
-    }
-
-    private class CustomTask extends AsyncTask<String, Void, List<Item>> {
-
-        @Override
-        protected List<Item> doInBackground(String... urlStrings) {
-
-            List<Item> items;
-            if (urlStrings.length < 1 || urlStrings[0] == "") {
-                return null;
-            }
-            String jsonString = JsonUtils.makeHttpRequest(urlStrings[0]);
-            items = JsonUtils.jsonDecoder(jsonString);
-            return items;
-        }
-
-        @Override
-        protected void onPostExecute(List<Item> items) {
-            Log.e("DONE", "" + items.size());
-            if (items != null) {
-                setUi(items);
-            }
-        }
     }
 }
