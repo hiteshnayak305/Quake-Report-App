@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
@@ -20,10 +20,9 @@ public class EarthquakeActivity extends AppCompatActivity {
         CustomTask task = new CustomTask();
 
         task.execute("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10");
-        //task.execute("http://ip.jsontest.com/");
     }
 
-    public void setUi(ArrayList<Item> items) {
+    public void setUi(List<Item> items) {
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -37,12 +36,12 @@ public class EarthquakeActivity extends AppCompatActivity {
 
     }
 
-    private class CustomTask extends AsyncTask<String, Void, ArrayList<Item>> {
+    private class CustomTask extends AsyncTask<String, Void, List<Item>> {
 
         @Override
-        protected ArrayList<Item> doInBackground(String... urlStrings) {
+        protected List<Item> doInBackground(String... urlStrings) {
 
-            ArrayList<Item> items;
+            List<Item> items;
             if (urlStrings.length < 1 || urlStrings[0] == "") {
                 return null;
             }
@@ -52,7 +51,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Item> items) {
+        protected void onPostExecute(List<Item> items) {
             Log.e("DONE", "" + items.size());
             if (items != null) {
                 setUi(items);

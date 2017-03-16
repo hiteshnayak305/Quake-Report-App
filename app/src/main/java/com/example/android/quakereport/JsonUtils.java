@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility class for JSON Parsing
@@ -25,8 +26,8 @@ final class JsonUtils {
 
     }
 
-    static ArrayList<Item> jsonDecoder(String jsonResponse) {
-        ArrayList<Item> items = new ArrayList<>();
+    static List<Item> jsonDecoder(String jsonResponse) {
+        List<Item> items = new ArrayList<>();
         if (jsonResponse == null) {
             return items;
         }

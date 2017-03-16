@@ -14,16 +14,16 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * custom adapter for items
  */
 
-public class ItemAdapter extends ArrayAdapter {
+class ItemAdapter extends ArrayAdapter {
 
-    public ItemAdapter(Context context, ArrayList<Item> objects) {
+    ItemAdapter(Context context, List<Item> objects) {
         super(context, 0, objects);
     }
 
