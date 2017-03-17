@@ -40,6 +40,11 @@ class EarthquakeLoader extends AsyncTaskLoader<List<Item>> {
         if (urlString == null || urlString.equals("")) {
             return null;
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String jsonString = JsonUtils.makeHttpRequest(urlString);
         items = JsonUtils.jsonDecoder(jsonString);
         return items;

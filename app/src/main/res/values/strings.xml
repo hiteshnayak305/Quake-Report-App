@@ -17,4 +17,6 @@
     <string name="mag">7.2</string>
 
     <string name="near_the">Near the,</string>
+    <string name="no_eq">No Earthquake found!!!</string>
+    <string name="no_inet">No Internet connection found!!!</string>
 </resources>
